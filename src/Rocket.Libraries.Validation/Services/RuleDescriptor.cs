@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Rocket.Libraries.Validation.Services
+﻿namespace Rocket.Libraries.Validation.Services
 {
+    using System;
+
     internal class RuleDescriptor
     {
         public Func<bool> FailureCondition { get; set; }

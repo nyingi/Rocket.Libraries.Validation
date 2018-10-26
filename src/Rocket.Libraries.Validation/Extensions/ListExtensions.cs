@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Rocket.Libraries.Validation.Extensions
+﻿namespace Rocket.Libraries.Validation.Extensions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     internal static class ListExtensions
     {
         public static bool TrueThat<TType>(this List<TType> list, Func<TType, bool> condition)

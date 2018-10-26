@@ -1,14 +1,13 @@
-﻿using Rocket.Libraries.Validation.Exceptions;
-using Rocket.Libraries.Validation.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Rocket.Libraries.Validation.Services
+﻿namespace Rocket.Libraries.Validation.Services
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Rocket.Libraries.Validation.Exceptions;
+    using Rocket.Libraries.Validation.Models;
+
     public class DataValidator
     {
-        private List<RuleDescriptor> _rules = new List<RuleDescriptor>();
         private List<RuleDescriptor> _expectedStates = new List<RuleDescriptor>();
 
         /// <summary>
@@ -26,7 +25,7 @@ namespace Rocket.Libraries.Validation.Services
             {
                 MessageOnFailure = messageOnFailure,
                 FailureCondition = failureCondition,
-                TerminateValidationOnFailure = terminateValidationOnFailure
+                TerminateValidationOnFailure = terminateValidationOnFailure,
             });
             return this;
         }
@@ -68,10 +67,8 @@ namespace Rocket.Libraries.Validation.Services
             {
                 var errors = errorMessages.Select(a => new Error { Message = a }).ToList();
                 ClearGlobalErrors();
-                throw new IncorrectDataException
-                {
-                    Errors = errors
-                };
+                var exception = new IncorrectDataException();
+                exception.Errors.AddRange(errors);
             }
         }
 

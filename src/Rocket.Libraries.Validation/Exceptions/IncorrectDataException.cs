@@ -1,13 +1,29 @@
-﻿using Rocket.Libraries.Validation.Extensions;
-using Rocket.Libraries.Validation.Models;
-using System;
-using System.Collections.Generic;
-
-namespace Rocket.Libraries.Validation.Exceptions
+﻿namespace Rocket.Libraries.Validation.Exceptions
 {
+    using System;
+    using System.Collections.Generic;
+    using Rocket.Libraries.Validation.Extensions;
+    using Rocket.Libraries.Validation.Models;
+
     public class IncorrectDataException : Exception
     {
-        public List<Error> Errors { get; set; }
+        public IncorrectDataException()
+        {
+        }
+
+        public IncorrectDataException(string message)
+            : base(message)
+        {
+        }
+
+        public IncorrectDataException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
+
+        public List<Error> Errors { get; } = new List<Error>();
+
+        public override string Message => this.ToString();
 
         public override string ToString()
         {
@@ -25,7 +41,5 @@ namespace Rocket.Libraries.Validation.Exceptions
                 return error;
             }
         }
-
-        public override string Message => this.ToString();
     }
 }
