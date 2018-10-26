@@ -18,7 +18,7 @@
         /// <param name="failureCondition">Func that when it evaluates to true, validation is considered to have failed</param>
         /// <param name="messageOnFailure">Message to be given when validation fails</param>
         /// <param name="terminateValidationOnFailure">Should failing of this rule cause further validation to be canceled?</param>
-        /// <returns></returns>
+        /// <returns>Instance of self to allow chaining of multiple calls to data validator</returns>
         public virtual DataValidator AddFailureCondition(Func<bool> failureCondition, string messageOnFailure, bool terminateValidationOnFailure)
         {
             _expectedStates.Add(new RuleDescriptor
@@ -35,7 +35,7 @@
         /// </summary>
         /// <param name="failureCondition">Func that when it evaluates to true, validation is considered to have failed</param>
         /// <param name="messageOnFailure">Message to be given when validation fails</param>
-        /// <returns></returns>
+        /// <returns>Instance of self to allow chaining of multiple calls to data validator</returns>
         public virtual DataValidator EvaluateImmediate(Func<bool> failureCondition, string messageOnFailure)
         {
             new DataValidator()
@@ -44,6 +44,10 @@
             return this;
         }
 
+        /// <summary>
+        /// Runs the failure rules and returns any error messages but does not trigger an exception
+        /// </summary>
+        /// <returns>List of string contains any error messages returned</returns>
         public virtual List<string> GetInvalidStateMessages()
         {
             var messages = new List<string>();
@@ -56,9 +60,14 @@
                     break;
                 }
             }
+
             return messages;
         }
 
+        /// <summary>
+        /// Evaluates all the failure conditions and throws an exception with a collection of all the failure messages (if any)
+        /// discovered.
+        /// </summary>
         public virtual void ThrowExceptionOnInvalidRules()
         {
             var errorMessages = GetInvalidStateMessages();
@@ -88,17 +97,8 @@
             {
                 return;
             }
-            messages.Add(errorMessage);
-        }
 
-        [Obsolete]
-        private string GetErrorMessageOnRuleFailure(RuleDescriptor rule)
-        {
-            if (rule.FailureCondition() == false)
-            {
-                return rule.MessageOnFailure;
-            }
-            return string.Empty;
+            messages.Add(errorMessage);
         }
 
         private string GetInvalidRuleMessage(RuleDescriptor rule)
@@ -107,6 +107,7 @@
             {
                 return rule.MessageOnFailure;
             }
+
             return string.Empty;
         }
     }
