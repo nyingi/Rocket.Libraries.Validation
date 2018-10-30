@@ -78,6 +78,7 @@
                 ClearGlobalErrors();
                 var exception = new IncorrectDataException();
                 exception.Errors.AddRange(errors);
+                throw exception;
             }
         }
 
