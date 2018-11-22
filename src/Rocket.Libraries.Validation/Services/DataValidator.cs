@@ -21,13 +21,20 @@
         /// <returns>Instance of self to allow chaining of multiple calls to data validator</returns>
         public virtual DataValidator AddFailureCondition(Func<bool> failureCondition, string messageOnFailure, bool terminateValidationOnFailure)
         {
-            _expectedStates.Add(new RuleDescriptor
+            if (terminateValidationOnFailure)
             {
-                MessageOnFailure = messageOnFailure,
-                FailureCondition = failureCondition,
-                TerminateValidationOnFailure = terminateValidationOnFailure,
-            });
-            return this;
+                return EvaluateImmediate(failureCondition, messageOnFailure);
+            }
+            else
+            {
+                _expectedStates.Add(new RuleDescriptor
+                {
+                    MessageOnFailure = messageOnFailure,
+                    FailureCondition = failureCondition,
+                    TerminateValidationOnFailure = terminateValidationOnFailure,
+                });
+                return this;
+            }
         }
 
         /// <summary>
