@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28010.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rocket.Libraries.Validation", "src\Rocket.Libraries.Validation\Rocket.Libraries.Validation.csproj", "{253F94E2-E81A-40D7-98E5-B9DF22B5746C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rocket.Libraries.ValidationTests", "tests\Rocket.Libraries.ValidationTests\Rocket.Libraries.ValidationTests.csproj", "{A71DFAB9-C77C-46F4-A2F6-A6676FD0EBFF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{253F94E2-E81A-40D7-98E5-B9DF22B5746C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{253F94E2-E81A-40D7-98E5-B9DF22B5746C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{253F94E2-E81A-40D7-98E5-B9DF22B5746C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A71DFAB9-C77C-46F4-A2F6-A6676FD0EBFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A71DFAB9-C77C-46F4-A2F6-A6676FD0EBFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A71DFAB9-C77C-46F4-A2F6-A6676FD0EBFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A71DFAB9-C77C-46F4-A2F6-A6676FD0EBFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using Rocket.Libraries.Validation.Exceptions;
     using Rocket.Libraries.Validation.Models;
 
@@ -25,6 +26,26 @@
             {
                 MessageOnFailure = messageOnFailure,
                 FailureCondition = failureCondition,
+                TerminateValidationOnFailure = terminateValidationOnFailure,
+            });
+            return this;
+        }
+
+        /// <summary>
+        /// Queues a function that should be considered a validation failure if it evaluates to true
+        /// Also associates an error message with the validation and finally states whether or not
+        /// failure of this condition should prevent further validation of subsequent rules
+        /// </summary>
+        /// <param name="failureCondition">Func that when it evaluates to true, validation is considered to have failed</param>
+        /// <param name="messageOnFailure">Message to be given when validation fails</param>
+        /// <param name="terminateValidationOnFailure">Should failing of this rule cause further validation to be canceled?</param>
+        /// <returns>Instance of self to allow chaining of multiple calls to data validator</returns>
+        public virtual DataValidator AddAsyncFailureCondition(Func<Task<bool>> failureCondition, string messageOnFailure, bool terminateValidationOnFailure)
+        {
+            _expectedStates.Add(new RuleDescriptor
+            {
+                MessageOnFailure = messageOnFailure,
+                FailureCondition = () => AsyncHelpers.RunSync<bool>(() => failureCondition()),
                 TerminateValidationOnFailure = terminateValidationOnFailure,
             });
             return this;
