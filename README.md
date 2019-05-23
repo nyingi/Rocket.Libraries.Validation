@@ -23,3 +23,7 @@ Consider the following business logic, you wish to persist information about a s
 1. Student's admission date must be entered.
 1. Student's admission date cannot be before the date of birth.
 1. Student's admission date cannot be a future date.
+
+## Possible Solutions
+1. ### If-ElseIf-Else
+
