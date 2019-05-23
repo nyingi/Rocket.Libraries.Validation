@@ -26,4 +26,9 @@ Consider the following business logic, you wish to persist information about a s
 
 ## Possible Solutions
 1. ### If-ElseIf-Else
+```csharp
+....
+private string GetValidationError(Student student)
+{
 
+}
