@@ -15,20 +15,3 @@ Worse still while working in a team, there wasn't a consistent way of that team 
 
 Clearly not ideal
 
-# How It Works
-Consider the following business logic, you wish to persist information about a student to a database, and the rules below must be enforced.
-1. Student's date of birth must be entered.
-1. Student's date of birth cannot be a future date.
-1. Student must be at least 18 years old.
-1. Student's admission date must be entered.
-1. Student's admission date cannot be before the date of birth.
-1. Student's admission date cannot be a future date.
-
-## Possible Solutions
-1. ### If-ElseIf-Else
-```csharp
-....
-private string GetValidationError(Student student)
-{
-
-}
