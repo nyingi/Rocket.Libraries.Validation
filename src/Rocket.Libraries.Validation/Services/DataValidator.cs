@@ -85,6 +85,16 @@
             return messages;
         }
 
+        public static void Throw(string errorMessage)
+        {
+            new DataValidator().EvaluateImmediate(() => true, errorMessage);
+        }
+
+        public static DataValidator Evaluate(Func<bool> failureCondition, string messageOnFailure)
+        {
+            return new DataValidator().EvaluateImmediate(failureCondition, messageOnFailure);
+        }
+
         /// <summary>
         /// Evaluates all the failure conditions and throws an exception with a collection of all the failure messages (if any)
         /// discovered.
