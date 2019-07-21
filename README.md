@@ -16,4 +16,4 @@ Worse still while working in a team, there wasn't a consistent way of that team 
 Clearly not ideal
 
 # Quick Start
-Installation, grab the package from nuget[https://www.nuget.org/packages/Rocket.Libraries.Validation/]
+Installation, grab the package from nuget https://www.nuget.org/packages/Rocket.Libraries.Validation/
