@@ -24,7 +24,7 @@ Installation, grab the package from nuget https://www.nuget.org/packages/Rocket.
 You may for example wish to check that an object isn't null before you proceed to use it. In such cases, it is common to write code similar to below.
 
 
-'''csharp
+'''cs
 
 public void DoStuff(User user)
 {
