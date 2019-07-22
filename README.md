@@ -5,7 +5,6 @@ A Functional C# validation library
 This is a simple library that allows you to organize validation rules and then evaluate the rules during runtime with an exception getting thrown if any of the rules, fails.
 
 # Why Use a Library?
-Well first off, GiGo - validation can be very mundane but it is essential in all serious applications.
 
 I found myself writing a forest of __*if-elseif-else*__ or __*switch blocks*__ to handle validation.
 
