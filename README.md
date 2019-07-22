@@ -54,7 +54,7 @@ The inline __*EvaluateImmediate*__ method takes in a boolean function as its fir
 The second code snippet that uses the library is more readable, enforces more structure and introduces less code complexity.
 
 ## Multiple/Chained Condition Evaluation
-In this example, we'll check that a __*User*__ object is not null and that the property __*Username*__ is not empty. Without the library, we can handle that validation as shown below.
+In this example, we'll check that a __*User*__ object is not null and that the property __*Username*__ is not empty and that the length of the *__Username__* property is not less than 6 characters. Without the library, we can handle that validation as shown below.
 ```cs
 public bool ValidateUserName(User user)
 {
@@ -90,7 +90,8 @@ With the validation library, we're able collapse the above code to something sim
 ```cs
 public bool ValidateUserName(User user)
 {
-  new DataValidator()
+ const int minLength = 6;
+ new DataValidator()
     .AddFailureCondition(() => user == null, "User was not supplied", true)
     .AddFailureCondition(() => string.IsNullOrEmpty(user.Username), "Username was not supplied. Usernames are mandatory", false)
     .AddFailureCondition(() => user.Username.Length < minLength, $"Username '{user.Username}' is too short. At least {minLength} characters are required", false)
