@@ -99,7 +99,7 @@ public bool ValidateUserName(User user)
 }
 ```
 
-The__*AddFailureCondition*__ method also take in a ``` Func<bool>``` as its first parameter, which should evaluate to true to indicate a failing validation. As a second paramter, it takes in a ``` string ``` which serves as the error message for the failing condition, and finally it takes a ``` bool ``` parameter to indicate whether or not a rule is critical, i.e does the failing of a rule make validation of follow-up rules unnecessary.
+The *__AddFailureCondition__* method also take in a ``` Func<bool>``` as its first parameter, which should evaluate to true to indicate a failing validation. As a second paramter, it takes in a ``` string ``` which serves as the error message for the failing condition, and finally it takes a ``` bool ``` parameter to indicate whether or not a rule is critical, i.e does the failing of a rule make validation of follow-up rules unnecessary.
 
 An example of a critical rule is whether our ``` user ``` object is null, as if the object is indeed null, then it follows that trying to check whether ``` user.Username ``` is empty would result in a ``` NullPointerException ``` being thrown by the runtime.
 
