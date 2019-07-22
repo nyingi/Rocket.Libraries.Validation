@@ -103,8 +103,11 @@ The *__AddFailureCondition__* method also take in a ``` Func<bool>``` as its fir
 
 An example of a critical rule is whether our ``` user ``` object is null, as if the object is indeed null, then it follows that trying to check whether ``` user.Username ``` is empty would result in a ``` NullPointerException ``` being thrown by the runtime.
 
-Again, using the library greatly reduces code complexity and also as an bonus inlining allows error messages to live next to the rule they belong to, as opposed to the snippet without the library that has rule in the ``` if ``` part of the clause and the error message in the ``` else ```. This increases readabililty and maintainability.
+Again, using the library greatly reduces code complexity and also as an bonus inlining allows error messages to live next to the rule they belong to.
 
+In opposition to inlining, the snippet without the library has rule in the ``` if ``` part of the clause and the error message in the ``` else ```. 
+
+Not only does the Rocket Validation Library reduce the lines of code required, but it enforces structured validation, and also increases code readabililty which will result in easier to troubleshoot code, thats more maintainable.
 
 # Validation Results
 ## IncorrectDataException 
