@@ -41,9 +41,11 @@ With Rocket Validation, you can reduce the complexity of the above code by re-wr
 
 ```cs
 
+private DataValidator _validator = new DataValidator();
+
 public void DoStuff(User user)
 {
-    new DataValidator()
+    _validator
         .EvaluateImmediate(() => user == null, "User was not supplied");
     //Do stuff with the user object
 }
@@ -88,10 +90,14 @@ public bool ValidateUserName(User user)
 With the validation library, we're able collapse the above code to something similar to the following:
 
 ```cs
+
+private DataValidator _validator = new DataValidator();
+
+
 public bool ValidateUserName(User user)
 {
  const int minLength = 6;
- new DataValidator()
+ _validator
     .AddFailureCondition(() => user == null, "User was not supplied", true)
     .AddFailureCondition(() => string.IsNullOrEmpty(user.Username), "Username was not supplied. Usernames are mandatory", false)
     .AddFailureCondition(() => user.Username.Length < minLength, $"Username '{user.Username}' is too short. At least {minLength} characters are required", false)
