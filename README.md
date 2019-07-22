@@ -99,11 +99,11 @@ public bool ValidateUserName(User user)
 }
 ```
 
-The__*AddFailureCondition*__ method also take in a ```cs Func<bool>``` as its first parameter, which should evaluate to true to indicate a failing validation. As a second paramter, it takes in a ```cs string ``` which serves as the error message for the failing condition, and finally it takes a ```cs bool ``` parameter to indicate whether or not a rule is critical, i.e does the failing of a rule make validation of follow-up rules unnecessary.
+The__*AddFailureCondition*__ method also take in a ``` Func<bool>``` as its first parameter, which should evaluate to true to indicate a failing validation. As a second paramter, it takes in a ``` string ``` which serves as the error message for the failing condition, and finally it takes a ``` bool ``` parameter to indicate whether or not a rule is critical, i.e does the failing of a rule make validation of follow-up rules unnecessary.
 
-An example of a critical rule is whether our ```cs user ``` object is null, as if the object is indeed null, then it follows that trying to check whether ```cs user.Username ``` is empty would result in a ```cs NullPointerException ``` being thrown by the runtime.
+An example of a critical rule is whether our ``` user ``` object is null, as if the object is indeed null, then it follows that trying to check whether ``` user.Username ``` is empty would result in a ``` NullPointerException ``` being thrown by the runtime.
 
-Again, using the library greatly reduces code complexity and also as an bonus inlining allows error messages to live next to the rule they belong to, as opposed to the snippet without the library that has rule in the ```cs if ``` part of the clause and the error message in the ```cs else ```. This increases readabililty and maintainability.
+Again, using the library greatly reduces code complexity and also as an bonus inlining allows error messages to live next to the rule they belong to, as opposed to the snippet without the library that has rule in the ``` if ``` part of the clause and the error message in the ``` else ```. This increases readabililty and maintainability.
 
 
 # Validation Results
