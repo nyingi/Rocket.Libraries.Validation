@@ -13,7 +13,27 @@ While these conditional blocks work, they tend to get more unreadable and more u
 
 Worse still while working in a team, there wasn't a consistent way of that team members were using to validate and hence checks were peppered all over code in various flavours. 
 
-Clearly not ideal
+What this validation library allows you to do, is to collapse what would be branch statements into inline statements, for more manageable code.
 
-# Quick Start
+# Package
 Installation, grab the package from nuget https://www.nuget.org/packages/Rocket.Libraries.Validation/
+
+# Example Usage
+
+## Single Condition Validation
+You may for example wish to check that an object isn't null before you proceed to use it. In such cases, it is common to write code similar to below.
+
+
+'''csharp
+
+public void DoStuff(User user)
+{
+  if(user == null)
+  {
+    throw new Exception("User was not supplied");
+  }
+  else
+  {
+    //Do stuff with the user object
+  }
+}
