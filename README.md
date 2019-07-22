@@ -105,7 +105,7 @@ An example of a critical rule is whether our ``` user ``` object is null, as if 
 
 Again, using the library greatly reduces code complexity and also as an bonus inlining allows error messages to live next to the rule they belong to.
 
-In opposition to inlining, the snippet without the library has rule in the ``` if ``` part of the clause and the error message in the ``` else ```. 
+In opposition to inlining, the snippet without the library has rule in the ``` if ``` part of the clause and the error message in the ``` else ```. A practise that makes it harder to follow what the code is doing as rules increase especially if the ``` if/else ``` blocks get nested too deeply.
 
 Not only does the Rocket Validation Library reduce the lines of code required, but it enforces structured validation, and also increases code readabililty which will result in easier to troubleshoot code, thats more maintainable.
 
