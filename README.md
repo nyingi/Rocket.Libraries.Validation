@@ -55,7 +55,7 @@ The inline __*EvaluateImmediate*__ method takes in a boolean function as its fir
 The second code snippet that uses the library is more readable, enforces more structure and introduces less code complexity.
 
 ## Multiple/Chained Condition Evaluation
-In this example, we'll check that a __*User*__ object is not null and that the property __*Username*__ is not empty. Without the library, we can handle that validation as show below.
+In this example, we'll check that a __*User*__ object is not null and that the property __*Username*__ is not empty. Without the library, we can handle that validation as shown below.
 ```cs
 public bool ValidateUserName(User user)
 {
