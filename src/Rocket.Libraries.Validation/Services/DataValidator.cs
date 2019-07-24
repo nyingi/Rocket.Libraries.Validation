@@ -20,12 +20,34 @@
         /// <param name="messageOnFailure">Message to be given when validation fails</param>
         /// <param name="terminateValidationOnFailure">Should failing of this rule cause further validation to be canceled?</param>
         /// <returns>Instance of self to allow chaining of multiple calls to data validator</returns>
+        [Obsolete("If passed long-lived variables in the closure, this method may result in unnecessary usage of memory dependant on the lifetime of captured variables")]
         public virtual DataValidator AddFailureCondition(Func<bool> failureCondition, string messageOnFailure, bool terminateValidationOnFailure)
+        {
+            return AddFailureCondition(failureCondition(), messageOnFailure, terminateValidationOnFailure);
+        }
+
+        public virtual DataValidator AddFailureCondition<TValue>(TValue value, FailureConditionDescriptor<TValue> failureConditionDescriptor)
+        {
+            return AddFailureCondition(value, failureConditionDescriptor.FailureCondition, failureConditionDescriptor.MessageOnFailure, failureConditionDescriptor.TerminateValidationOnFailure);
+        }
+
+        public virtual DataValidator AddFailureCondition<TValue>(TValue value, Func<TValue, bool> failureCondition, string messageOnFailure, bool terminateValidationOnFailure)
         {
             _expectedStates.Add(new RuleDescriptor
             {
                 MessageOnFailure = messageOnFailure,
-                FailureCondition = failureCondition,
+                RuleFailed = failureCondition(value),
+                TerminateValidationOnFailure = terminateValidationOnFailure,
+            });
+            return this;
+        }
+
+        public virtual DataValidator AddFailureCondition(bool ruleFailed, string messageOnFailure, bool terminateValidationOnFailure)
+        {
+            _expectedStates.Add(new RuleDescriptor
+            {
+                MessageOnFailure = messageOnFailure,
+                RuleFailed = ruleFailed,
                 TerminateValidationOnFailure = terminateValidationOnFailure,
             });
             return this;
@@ -45,7 +67,7 @@
             _expectedStates.Add(new RuleDescriptor
             {
                 MessageOnFailure = messageOnFailure,
-                FailureCondition = () => AsyncHelpers.RunSync<bool>(() => failureCondition()),
+                RuleFailed = AsyncHelpers.RunSync<bool>(() => failureCondition()),
                 TerminateValidationOnFailure = terminateValidationOnFailure,
             });
             return this;
@@ -57,10 +79,24 @@
         /// <param name="failureCondition">Func that when it evaluates to true, validation is considered to have failed</param>
         /// <param name="messageOnFailure">Message to be given when validation fails</param>
         /// <returns>Instance of self to allow chaining of multiple calls to data validator</returns>
+        [Obsolete("If passed long-lived variables in the closure, this method may result in unnecessary usage of memory dependant on the lifetime of captured variables")]
         public virtual DataValidator EvaluateImmediate(Func<bool> failureCondition, string messageOnFailure)
         {
             new DataValidator()
                 .AddFailureCondition(failureCondition, messageOnFailure, true)
+                .ThrowExceptionOnInvalidRules();
+            return this;
+        }
+
+        public virtual DataValidator EvaluateImmediate<TValue>(TValue value, Func<TValue, bool> failureCondition, string messageOnFailure)
+        {
+            return EvaluateImmediate(value, failureCondition, messageOnFailure);
+        }
+
+        public virtual DataValidator EvaluateImmediate(bool RuleFailed, string messageOnFailure)
+        {
+            new DataValidator()
+                .AddFailureCondition(RuleFailed, messageOnFailure, true)
                 .ThrowExceptionOnInvalidRules();
             return this;
         }
@@ -135,7 +171,7 @@
 
         private string GetInvalidRuleMessage(RuleDescriptor rule)
         {
-            if (rule.FailureCondition())
+            if (rule.RuleFailed)
             {
                 return rule.MessageOnFailure;
             }
