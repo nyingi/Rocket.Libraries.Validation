@@ -26,11 +26,6 @@
             return AddFailureCondition(failureCondition(), messageOnFailure, terminateValidationOnFailure);
         }
 
-        public virtual DataValidator AddFailureCondition<TValue>(TValue value, FailureConditionDescriptor<TValue> failureConditionDescriptor)
-        {
-            return AddFailureCondition(value, failureConditionDescriptor.FailureCondition, failureConditionDescriptor.MessageOnFailure, failureConditionDescriptor.TerminateValidationOnFailure);
-        }
-
         public virtual DataValidator AddFailureCondition<TValue>(TValue value, Func<TValue, bool> failureCondition, string messageOnFailure, bool terminateValidationOnFailure)
         {
             _expectedStates.Add(new RuleDescriptor
