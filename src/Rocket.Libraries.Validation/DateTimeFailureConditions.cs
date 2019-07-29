@@ -20,5 +20,10 @@ namespace Rocket.Libraries.Validation
         {
             return userValue > compareValue;
         }
+
+        public static bool IsDefaultDate(DateTime userValue)
+        {
+            return userValue == default;
+        }
     }
 }

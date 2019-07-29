@@ -20,12 +20,23 @@
         /// <param name="messageOnFailure">Message to be given when validation fails</param>
         /// <param name="terminateValidationOnFailure">Should failing of this rule cause further validation to be canceled?</param>
         /// <returns>Instance of self to allow chaining of multiple calls to data validator</returns>
-        [Obsolete("If passed long-lived variables in the closure, this method may result in unnecessary usage of memory dependant on the lifetime of captured variables")]
+        [Obsolete("If passed long-lived variables in the closure, this method may result in unnecessary usage of memory dependant on the lifetime of captured variables. This method only exists to prevent breaking old code that was build against it.")]
         public virtual DataValidator AddFailureCondition(Func<bool> failureCondition, string messageOnFailure, bool terminateValidationOnFailure)
         {
             return AddFailureCondition(failureCondition(), messageOnFailure, terminateValidationOnFailure);
         }
 
+        /// <summary>
+        /// Queues a function that acts as a condition to be tested. The function takes in one parameter of type <typeparamref name="TValue"/> and returns
+        /// true if the condition fails. If the function returns true, then the error message <paramref name="messageOnFailure"/> is added
+        /// to list of errors to be returned when <see cref="ThrowExceptionOnInvalidRules"/> is called.
+        /// </summary>
+        /// <typeparam name="TValue">Type of value to be passed into the testing function</typeparam>
+        /// <param name="value">The value to be tested</param>
+        /// <param name="failureCondition">The function that is to be run as a test condition</param>
+        /// <param name="messageOnFailure">The message to be output if <paramref name="failureCondition"/> returns true</param>
+        /// <param name="terminateValidationOnFailure">Should failing of this rule cause further validation to be canceled?</param>
+        /// <returns>Instance of self to allow chaining of multiple calls to data validator</returns>
         public virtual DataValidator AddFailureCondition<TValue>(TValue value, Func<TValue, bool> failureCondition, string messageOnFailure, bool terminateValidationOnFailure)
         {
             _expectedStates.Add(new RuleDescriptor
@@ -37,6 +48,14 @@
             return this;
         }
 
+        /// <summary>
+        ///Takes in a boolean value which when equal to true, indicates that a rule failed. If the rule did fail, then the error message <paramref name="messageOnFailure"/> is added
+        ///to list of errors to be returned when <see cref="ThrowExceptionOnInvalidRules"/> is called.
+        /// </summary>
+        /// <param name="ruleFailed">The function that is to be run as a test condition</param>
+        /// <param name="messageOnFailure">The message to be  added to error list if <paramref name="ruleFailed"/> is true</param>
+        /// <param name="terminateValidationOnFailure">Should failing of this rule cause further validation to be canceled?</param>
+        /// <returns>Instance of self to allow chaining of multiple calls to data validator</returns>
         public virtual DataValidator AddFailureCondition(bool ruleFailed, string messageOnFailure, bool terminateValidationOnFailure)
         {
             _expectedStates.Add(new RuleDescriptor
@@ -57,6 +76,7 @@
         /// <param name="messageOnFailure">Message to be given when validation fails</param>
         /// <param name="terminateValidationOnFailure">Should failing of this rule cause further validation to be canceled?</param>
         /// <returns>Instance of self to allow chaining of multiple calls to data validator</returns>
+        [Obsolete("If passed long-lived variables in the closure, this method may result in unnecessary usage of memory dependant on the lifetime of captured variables. This method only exists to prevent breaking old code that was build against it.")]
         public virtual DataValidator AddAsyncFailureCondition(Func<Task<bool>> failureCondition, string messageOnFailure, bool terminateValidationOnFailure)
         {
             _expectedStates.Add(new RuleDescriptor
@@ -74,7 +94,7 @@
         /// <param name="failureCondition">Func that when it evaluates to true, validation is considered to have failed</param>
         /// <param name="messageOnFailure">Message to be given when validation fails</param>
         /// <returns>Instance of self to allow chaining of multiple calls to data validator</returns>
-        [Obsolete("If passed long-lived variables in the closure, this method may result in unnecessary usage of memory dependant on the lifetime of captured variables")]
+        [Obsolete("If passed long-lived variables in the closure, this method may result in unnecessary usage of memory dependant on the lifetime of captured variables. This method only exists to prevent breaking old code that was build against it.")]
         public virtual DataValidator EvaluateImmediate(Func<bool> failureCondition, string messageOnFailure)
         {
             new DataValidator()
@@ -83,15 +103,29 @@
             return this;
         }
 
+        /// <summary>
+        /// Creates a rule and evaluates it immediately. Throws an exception if <paramref name="failureCondition"/> returns true.
+        /// </summary>
+        /// <typeparam name="TValue">The datatype of the value to be evaluated</typeparam>
+        /// <param name="value">The value to be evaluated</param>
+        /// <param name="failureCondition">A function that takes in a value, evaluates it and returns either true if the value fails validation or false if the value passes</param>
+        /// <param name="messageOnFailure">The message specific to this rule that'll be added the resultant error list if rule fails</param>
+        /// <returns>Instance of self to allow chaining of multiple calls to data validator</returns>
         public virtual DataValidator EvaluateImmediate<TValue>(TValue value, Func<TValue, bool> failureCondition, string messageOnFailure)
         {
             return EvaluateImmediate(value, failureCondition, messageOnFailure);
         }
 
-        public virtual DataValidator EvaluateImmediate(bool RuleFailed, string messageOnFailure)
+        /// <summary>
+        /// Takes in the a boolean value and checks if it is true.
+        /// </summary>
+        /// <param name="ruleFailed">The value to be evaluated</param>
+        /// <param name="messageOnFailure">The message specific to this rule that'll be added the resultant error list if rule fails</param>
+        /// <returns>Instance of self to allow chaining of multiple calls to data validator</returns>
+        public virtual DataValidator EvaluateImmediate(bool ruleFailed, string messageOnFailure)
         {
             new DataValidator()
-                .AddFailureCondition(RuleFailed, messageOnFailure, true)
+                .AddFailureCondition(ruleFailed, messageOnFailure, true)
                 .ThrowExceptionOnInvalidRules();
             return this;
         }
@@ -116,11 +150,22 @@
             return messages;
         }
 
+        /// <summary>
+        /// Forces an exception to be thrown. Takes in an error message to be added to the exception's error list
+        /// </summary>
+        /// <param name="errorMessage">The error message</param>
         public static void Throw(string errorMessage)
         {
-            new DataValidator().EvaluateImmediate(() => true, errorMessage);
+            new DataValidator().EvaluateImmediate(true, errorMessage);
         }
 
+        /// <summary>
+        /// Creates a rule and evaluates it immediately. Throws an exception if <paramref name="failureCondition"/> returns true.
+        /// </summary>
+        /// <param name="failureCondition"></param>
+        /// <param name="messageOnFailure"></param>
+        /// <returns>An instance of DataValidator</returns>
+        [Obsolete("If passed long-lived variables in the closure, this method may result in unnecessary usage of memory dependant on the lifetime of captured variables. This method only exists to prevent breaking old code that was build against it.")]
         public static DataValidator Evaluate(Func<bool> failureCondition, string messageOnFailure)
         {
             return new DataValidator().EvaluateImmediate(failureCondition, messageOnFailure);
