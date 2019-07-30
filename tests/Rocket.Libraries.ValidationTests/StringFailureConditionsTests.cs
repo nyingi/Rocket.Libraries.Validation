@@ -42,5 +42,16 @@ namespace Rocket.Libraries.ValidationTests
             var result = StringFailureConditions.ShorterThan(userValue, minLength);
             Assert.Equal(shouldFail, result);
         }
+
+        [Theory]
+        [InlineData("0123456789", false)]
+        [InlineData("#123456789", true)]
+        [InlineData("0123456789.1", false)]
+        [InlineData("1234=4321", true)]
+        public void NumericValuesOnlyTestWorks(string userValue, bool shouldFail)
+        {
+            var result = StringFailureConditions.DoesNotParseToDoubleNumber(userValue);
+            Assert.Equal(shouldFail, result);
+        }
     }
 }
