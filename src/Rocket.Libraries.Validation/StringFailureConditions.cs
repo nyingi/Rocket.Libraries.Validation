@@ -55,6 +55,18 @@ namespace Rocket.Libraries.Validation
         }
 
         /// <summary>
+        /// Checks that a value contains only alphabetic characters
+        /// </summary>
+        /// <param name="userValue">Value to check</param>
+        /// <returns>True if non-alphabetic characters are found, or false if the entire string is composed of alphabetic characters only</returns>
+        public static bool ContainsNonAlphabeticCharacters(string userValue)
+        {
+            FailIfTestValueEmpty(userValue);
+            var alphaNumericRegEx = new Regex("^[a-zA-Z]+$");
+            return alphaNumericRegEx.IsMatch(userValue) == false;
+        }
+
+        /// <summary>
         /// Checks that a string does not exceed as specified length
         /// </summary>
         /// <param name="userValue">The string to check</param>

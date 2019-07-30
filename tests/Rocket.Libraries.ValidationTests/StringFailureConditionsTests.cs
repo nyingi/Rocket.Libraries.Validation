@@ -24,6 +24,21 @@ namespace Rocket.Libraries.ValidationTests
         }
 
         [Theory]
+        [InlineData("1234567890", true)]
+        [InlineData("abcdefghijklmnopqrstuvwxyz", false)]
+        [InlineData("ABCDEFGHIJKLMNOPQRSTUVWXYZ", false)]
+        [InlineData("123$4567890", true)]
+        [InlineData("abcdefgh245ijklmnopqrstuvwxyz", true)]
+        [InlineData("ABCDEFGHIJKLMNOPQ4646RSTUVWXYZ", true)]
+        [InlineData("abcdefgh&&^ijklmnopqrstuvwxyz", true)]
+        [InlineData("_ABCDEFGHIJKLMNOPQRSTUVWXYZ", true)]
+        public void AlphabeticFailureConditionsCatchesNonAlphabets(string testValue, bool shouldFail)
+        {
+            var result = StringFailureConditions.ContainsNonAlphabeticCharacters(testValue);
+            Assert.Equal(shouldFail, result);
+        }
+
+        [Theory]
         [InlineData("qwerty", 3, true)]
         [InlineData("qwerty", 6, false)]
         [InlineData("qwerty", 7, false)]
