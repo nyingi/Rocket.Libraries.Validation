@@ -27,28 +27,6 @@
         }
 
         /// <summary>
-        /// Queues a function that acts as a condition to be tested. The function takes in one parameter of type <typeparamref name="TValue"/> and returns
-        /// true if the condition fails. If the function returns true, then the error message <paramref name="messageOnFailure"/> is added
-        /// to list of errors to be returned when <see cref="ThrowExceptionOnInvalidRules"/> is called.
-        /// </summary>
-        /// <typeparam name="TValue">Type of value to be passed into the testing function</typeparam>
-        /// <param name="value">The value to be tested</param>
-        /// <param name="failureCondition">The function that is to be run as a test condition</param>
-        /// <param name="messageOnFailure">The message to be output if <paramref name="failureCondition"/> returns true</param>
-        /// <param name="terminateValidationOnFailure">Should failing of this rule cause further validation to be canceled?</param>
-        /// <returns>Instance of self to allow chaining of multiple calls to data validator</returns>
-        public virtual DataValidator AddFailureCondition<TValue>(TValue value, Func<TValue, bool> failureCondition, string messageOnFailure, bool terminateValidationOnFailure)
-        {
-            _expectedStates.Add(new RuleDescriptor
-            {
-                MessageOnFailure = messageOnFailure,
-                RuleFailed = failureCondition(value),
-                TerminateValidationOnFailure = terminateValidationOnFailure,
-            });
-            return this;
-        }
-
-        /// <summary>
         ///Takes in a boolean value which when equal to true, indicates that a rule failed. If the rule did fail, then the error message <paramref name="messageOnFailure"/> is added
         ///to list of errors to be returned when <see cref="ThrowExceptionOnInvalidRules"/> is called.
         /// </summary>
@@ -101,19 +79,6 @@
                 .AddFailureCondition(failureCondition, messageOnFailure, true)
                 .ThrowExceptionOnInvalidRules();
             return this;
-        }
-
-        /// <summary>
-        /// Creates a rule and evaluates it immediately. Throws an exception if <paramref name="failureCondition"/> returns true.
-        /// </summary>
-        /// <typeparam name="TValue">The datatype of the value to be evaluated</typeparam>
-        /// <param name="value">The value to be evaluated</param>
-        /// <param name="failureCondition">A function that takes in a value, evaluates it and returns either true if the value fails validation or false if the value passes</param>
-        /// <param name="messageOnFailure">The message specific to this rule that'll be added the resultant error list if rule fails</param>
-        /// <returns>Instance of self to allow chaining of multiple calls to data validator</returns>
-        public virtual DataValidator EvaluateImmediate<TValue>(TValue value, Func<TValue, bool> failureCondition, string messageOnFailure)
-        {
-            return EvaluateImmediate(value, failureCondition, messageOnFailure);
         }
 
         /// <summary>
