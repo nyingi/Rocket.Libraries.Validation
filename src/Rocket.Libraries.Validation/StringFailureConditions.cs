@@ -27,8 +27,15 @@ namespace Rocket.Libraries.Validation
         /// <returns>True if the value cannot be parsed as a valid double or false if it is indeed a valid double</returns>
         public static bool DoesNotParseToDoubleNumber(string userValue)
         {
-            FailIfTestValueEmpty(userValue);
-            return double.TryParse(userValue, out _) == false;
+            var nothingToValidate = string.IsNullOrEmpty(userValue);
+            if (nothingToValidate)
+            {
+                return true;
+            }
+            else
+            {
+                return double.TryParse(userValue, out _) == false;
+            }
         }
 
         /// <summary>
@@ -38,8 +45,15 @@ namespace Rocket.Libraries.Validation
         /// <returns>True if the value cannot be parsed as a valid integer or false if it is indeed a valid integer</returns>
         public static bool DoesNotParseToIntNumber(string userValue)
         {
-            FailIfTestValueEmpty(userValue);
-            return long.TryParse(userValue, out _) == false;
+            var nothingToValidate = string.IsNullOrEmpty(userValue);
+            if (nothingToValidate)
+            {
+                return true;
+            }
+            else
+            {
+                return long.TryParse(userValue, out _) == false;
+            }
         }
 
         /// <summary>
@@ -49,9 +63,15 @@ namespace Rocket.Libraries.Validation
         /// <returns>True if non-alpha-numeric characters are found, or false if the entire string is composed of alpha-numeric characters only</returns>
         public static bool ContainsNonAlphaNumericCharacters(string userValue)
         {
-            FailIfTestValueEmpty(userValue);
-            var alphaNumericRegEx = new Regex("^[a-zA-Z0-9]+$");
-            return alphaNumericRegEx.IsMatch(userValue) == false;
+            var nothingToValidate = string.IsNullOrEmpty(userValue);
+            if (nothingToValidate)
+            {
+                return true;
+            }
+            else
+            {
+                return FailsRegExFilter(userValue, "^[a-zA-Z0-9]+$");
+            }
         }
 
         /// <summary>
@@ -61,9 +81,27 @@ namespace Rocket.Libraries.Validation
         /// <returns>True if non-alphabetic characters are found, or false if the entire string is composed of alphabetic characters only</returns>
         public static bool ContainsNonAlphabeticCharacters(string userValue)
         {
-            FailIfTestValueEmpty(userValue);
-            var alphaNumericRegEx = new Regex("^[a-zA-Z]+$");
-            return alphaNumericRegEx.IsMatch(userValue) == false;
+            return FailsRegExFilter(userValue, "^[a-zA-Z]+$");
+        }
+
+        /// <summary>
+        /// Tests a user string against a specified RegEx filter
+        /// </summary>
+        /// <param name="userValue">The user string to validate</param>
+        /// <param name="regEx">The RegEx filter of allowed characters</param>
+        /// <returns>True if the user value fails the RegEx test of false if it passes</returns>
+        public static bool FailsRegExFilter(string userValue, string regEx)
+        {
+            var nothingToValidate = string.IsNullOrEmpty(userValue);
+            if (nothingToValidate)
+            {
+                return true;
+            }
+            else
+            {
+                var filter = new Regex(regEx);
+                return filter.IsMatch(userValue) == false;
+            }
         }
 
         /// <summary>
@@ -74,8 +112,15 @@ namespace Rocket.Libraries.Validation
         /// <returns>True if the string exceeds the length or false if it doesn't</returns>
         public static bool ExceedsLength(string userValue, uint length)
         {
-            FailIfTestValueEmpty(userValue);
-            return userValue.Length > length;
+            var nothingToValidate = string.IsNullOrEmpty(userValue);
+            if (nothingToValidate)
+            {
+                return false;
+            }
+            else
+            {
+                return userValue.Length > length;
+            }
         }
 
         /// <summary>
@@ -86,8 +131,16 @@ namespace Rocket.Libraries.Validation
         /// <returns>True if the string is shorter than the length or false it isn't</returns>
         public static bool ShorterThan(string userValue, uint length)
         {
-            var userValueLength = string.IsNullOrEmpty(userValue) ? 0 : userValue.Length;
-            return userValueLength < length;
+            var nothingToValidate = string.IsNullOrEmpty(userValue);
+            if (nothingToValidate)
+            {
+                return true;
+            }
+            else
+            {
+                var userValueLength = string.IsNullOrEmpty(userValue) ? 0 : userValue.Length;
+                return userValueLength < length;
+            }
         }
 
         /// <summary>
@@ -100,11 +153,6 @@ namespace Rocket.Libraries.Validation
         public static bool LengthOutsideOfBounds(string userValue, uint minLength, uint maxLength)
         {
             return ExceedsLength(userValue, maxLength) || ShorterThan(userValue, minLength);
-        }
-
-        private static void FailIfTestValueEmpty(string value)
-        {
-            new DataValidator().EvaluateImmediate(string.IsNullOrEmpty(value), "Test value is empty, nothing to validate");
         }
     }
 }
