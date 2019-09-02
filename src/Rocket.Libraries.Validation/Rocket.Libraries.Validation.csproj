@@ -2,7 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <Version>1.1.6-beta02</Version>
+    <Version>1.1.7</Version>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/nyingi/Rocket.Libraries.Validation</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/nyingi/Rocket.Libraries.Validation</RepositoryUrl>
   </PropertyGroup>
 
 </Project>
