@@ -6,6 +6,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/nyingi/Rocket.Libraries.Validation</PackageProjectUrl>
     <RepositoryUrl>https://github.com/nyingi/Rocket.Libraries.Validation</RepositoryUrl>
+    <Description>A Simple dotnet library for helping you structure your data validation.</Description>
   </PropertyGroup>
 
 </Project>
