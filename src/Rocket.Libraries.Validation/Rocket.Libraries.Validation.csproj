@@ -7,6 +7,7 @@
     <PackageProjectUrl>https://github.com/nyingi/Rocket.Libraries.Validation</PackageProjectUrl>
     <RepositoryUrl>https://github.com/nyingi/Rocket.Libraries.Validation</RepositoryUrl>
     <Description>A Simple .Net Standard library for helping you structure your data validation.</Description>
+    <Company>Nyingi Maina</Company>
   </PropertyGroup>
 
 </Project>
