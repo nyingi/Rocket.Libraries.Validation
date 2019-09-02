@@ -1,5 +1,5 @@
 # Rocket.Libraries.Validation
-A Functional C# validation library
+A Simple .Net Standard library for helping you structure your data validation.
 
 # What It Is
 This is a simple library that allows you to organize validation rules and then evaluate the rules during runtime with an exception getting thrown if any of the rules, fails.
@@ -46,12 +46,12 @@ private DataValidator _validator = new DataValidator();
 public void DoStuff(User user)
 {
     _validator
-        .EvaluateImmediate(() => user == null, "User was not supplied");
+        .EvaluateImmediate(user == null, "User was not supplied");
     //Do stuff with the user object
 }
 ```
 
-The inline __*EvaluateImmediate*__ method takes in a boolean function as its first parameter, which if evaluated to true, causes an exception to be thrown. The thrown exceptions's message is the string passed as the second parameter to __*EvaluateImmediate*__
+The inline __*EvaluateImmediate*__ method takes in a boolean value as its first parameter, which if true, causes an exception to be thrown. The thrown exceptions's message is the string passed as the second parameter to __*EvaluateImmediate*__
 
 The second code snippet that uses the library is more readable, enforces more structure and introduces less code complexity.
 
@@ -98,14 +98,14 @@ public bool ValidateUserName(User user)
 {
  const int minLength = 6;
  _validator
-    .AddFailureCondition(() => user == null, "User was not supplied", true)
-    .AddFailureCondition(() => string.IsNullOrEmpty(user.Username), "Username was not supplied. Usernames are mandatory", false)
-    .AddFailureCondition(() => user.Username.Length < minLength, $"Username '{user.Username}' is too short. At least {minLength} characters are required", false)
+    .AddFailureCondition(user == null, "User was not supplied", true)
+    .AddFailureCondition(string.IsNullOrEmpty(user.Username), "Username was not supplied. Usernames are mandatory", false)
+    .AddFailureCondition(user.Username.Length < minLength, $"Username '{user.Username}' is too short. At least {minLength} characters are required", false)
     .ThrowExceptionOnInvalidRules();
 }
 ```
 
-The *__AddFailureCondition__* method also take in a ``` Func<bool>``` as its first parameter, which should evaluate to true to indicate a failing validation. As a second paramter, it takes in a ``` string ``` which serves as the error message for the failing condition, and finally it takes a ``` bool ``` parameter to indicate whether or not a rule is critical, i.e does the failing of a rule make validation of follow-up rules unnecessary.
+The *__AddFailureCondition__* method also take in a ``` bool``` as its first parameter, which should evaluate to true to indicate a failing validation. As a second paramter, it takes in a ``` string ``` which serves as the error message for the failing condition, and finally it takes a ``` bool ``` parameter to indicate whether or not a rule is critical, i.e does the failing of a rule make validation of follow-up rules unnecessary.
 
 An example of a critical rule is whether our ``` user ``` object is null, as if the object is indeed null, then it follows that trying to check whether ``` user.Username ``` is empty would result in a ``` NullPointerException ``` being thrown by the runtime.
 
