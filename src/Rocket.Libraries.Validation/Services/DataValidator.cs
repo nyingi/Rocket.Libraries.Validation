@@ -6,25 +6,12 @@
     using System.Threading.Tasks;
     using Rocket.Libraries.Validation.Exceptions;
     using Rocket.Libraries.Validation.Models;
+    using Rocket.Libraries.Validation.Extensions;
+    using System.Collections.Immutable;
 
-    public class DataValidator
+    public class DataValidator : IDisposable
     {
-        private List<RuleDescriptor> _expectedStates = new List<RuleDescriptor>();
-
-        /// <summary>
-        /// Queues a function that should be considered a validation failure if it evaluates to true
-        /// Also associates an error message with the validation and finally states whether or not
-        /// failure of this condition should prevent further validation of subsequent rules
-        /// </summary>
-        /// <param name="failureCondition">Func that when it evaluates to true, validation is considered to have failed</param>
-        /// <param name="messageOnFailure">Message to be given when validation fails</param>
-        /// <param name="terminateValidationOnFailure">Should failing of this rule cause further validation to be canceled?</param>
-        /// <returns>Instance of self to allow chaining of multiple calls to data validator</returns>
-        [Obsolete("If passed long-lived variables in the closure, this method may result in unnecessary usage of memory dependant on the lifetime of captured variables. This method only exists to prevent breaking old code that was build against it.")]
-        public virtual DataValidator AddFailureCondition(Func<bool> failureCondition, string messageOnFailure, bool terminateValidationOnFailure)
-        {
-            return AddFailureCondition(failureCondition(), messageOnFailure, terminateValidationOnFailure);
-        }
+        private readonly List<RuleDescriptor> _expectedStates = new List<RuleDescriptor>();
 
         /// <summary>
         ///Takes in a boolean value which when equal to true, indicates that a rule failed. If the rule did fail, then the error message <paramref name="messageOnFailure"/> is added
@@ -46,39 +33,13 @@
         }
 
         /// <summary>
-        /// Queues a function that should be considered a validation failure if it evaluates to true
-        /// Also associates an error message with the validation and finally states whether or not
-        /// failure of this condition should prevent further validation of subsequent rules
+        /// Takes in the a boolean value and checks if it is true.
         /// </summary>
-        /// <param name="failureCondition">Func that when it evaluates to true, validation is considered to have failed</param>
-        /// <param name="messageOnFailure">Message to be given when validation fails</param>
-        /// <param name="terminateValidationOnFailure">Should failing of this rule cause further validation to be canceled?</param>
-        /// <returns>Instance of self to allow chaining of multiple calls to data validator</returns>
-        [Obsolete("If passed long-lived variables in the closure, this method may result in unnecessary usage of memory dependant on the lifetime of captured variables. This method only exists to prevent breaking old code that was build against it.")]
-        public virtual DataValidator AddAsyncFailureCondition(Func<Task<bool>> failureCondition, string messageOnFailure, bool terminateValidationOnFailure)
+        /// <param name="ruleFailed">The value to be evaluated</param>
+        /// <param name="messageOnFailure">The message specific to this rule that'll be added the resultant error list if rule fails</param>
+        public virtual void EvaluateImmediate(bool ruleFailed, string messageOnFailure)
         {
-            _expectedStates.Add(new RuleDescriptor
-            {
-                MessageOnFailure = messageOnFailure,
-                RuleFailed = AsyncHelpers.RunSync<bool>(() => failureCondition()),
-                TerminateValidationOnFailure = terminateValidationOnFailure,
-            });
-            return this;
-        }
-
-        /// <summary>
-        /// Creates a rule and evaluates it immediately. An exception is immediately thrown if the failure condition is met
-        /// </summary>
-        /// <param name="failureCondition">Func that when it evaluates to true, validation is considered to have failed</param>
-        /// <param name="messageOnFailure">Message to be given when validation fails</param>
-        /// <returns>Instance of self to allow chaining of multiple calls to data validator</returns>
-        [Obsolete("If passed long-lived variables in the closure, this method may result in unnecessary usage of memory dependant on the lifetime of captured variables. This method only exists to prevent breaking old code that was build against it.")]
-        public virtual DataValidator EvaluateImmediate(Func<bool> failureCondition, string messageOnFailure)
-        {
-            new DataValidator()
-                .AddFailureCondition(failureCondition, messageOnFailure, true)
-                .ThrowExceptionOnInvalidRules();
-            return this;
+            EvaluateImmediate<object>(ruleFailed, messageOnFailure);
         }
 
         /// <summary>
@@ -86,13 +47,15 @@
         /// </summary>
         /// <param name="ruleFailed">The value to be evaluated</param>
         /// <param name="messageOnFailure">The message specific to this rule that'll be added the resultant error list if rule fails</param>
-        /// <returns>Instance of self to allow chaining of multiple calls to data validator</returns>
-        public virtual DataValidator EvaluateImmediate(bool ruleFailed, string messageOnFailure)
+        /// <typeparam name="TResponse">Type to be returned. Useful for when you wish to use this method as the last line in a different method and you can use it to return a type that matches the caller method type</typeparam>
+        /// <returns>The default value of type <typeparamref name="TResponse"/></returns>
+        public virtual TResponse EvaluateImmediate<TResponse>(bool ruleFailed, string messageOnFailure)
         {
-            new DataValidator()
-                .AddFailureCondition(ruleFailed, messageOnFailure, true)
-                .ThrowExceptionOnInvalidRules();
-            return this;
+            using (var dataValidator = new DataValidator())
+            {
+                return dataValidator.AddFailureCondition(ruleFailed, messageOnFailure, true)
+                .ThrowExceptionOnInvalidRules<TResponse>();
+            }
         }
 
         /// <summary>
@@ -121,19 +84,21 @@
         /// <param name="errorMessage">The error message</param>
         public static void Throw(string errorMessage)
         {
-            new DataValidator().EvaluateImmediate(true, errorMessage);
+            Throw(errorMessage);
         }
 
         /// <summary>
-        /// Creates a rule and evaluates it immediately. Throws an exception if <paramref name="failureCondition"/> returns true.
+        /// Forces an exception to be thrown. Takes in an error message to be added to the exception's error list
         /// </summary>
-        /// <param name="failureCondition"></param>
-        /// <param name="messageOnFailure"></param>
-        /// <returns>An instance of DataValidator</returns>
-        [Obsolete("If passed long-lived variables in the closure, this method may result in unnecessary usage of memory dependant on the lifetime of captured variables. This method only exists to prevent breaking old code that was build against it.")]
-        public static DataValidator Evaluate(Func<bool> failureCondition, string messageOnFailure)
+        /// <param name="errorMessage">The error message</param>
+        /// <typeparam name="TResponse">Type to be returned. Useful for when you wish to use this method as the last line in a different method and you can use it to return a type that matches the caller method type</typeparam>
+        /// <returns>The default value of type <typeparamref name="TResponse"/></returns>
+        public static TResponse Throw<TResponse>(string errorMessage)
         {
-            return new DataValidator().EvaluateImmediate(failureCondition, messageOnFailure);
+            using (var dataValidator = new DataValidator())
+            {
+                return dataValidator.EvaluateImmediate<TResponse>(true, errorMessage);
+            }
         }
 
         /// <summary>
@@ -142,21 +107,36 @@
         /// </summary>
         public virtual void ThrowExceptionOnInvalidRules()
         {
+            ThrowExceptionOnInvalidRules<object>();
+        }
+
+        /// <summary>
+        /// Evaluates all the failure conditions and throws an exception with a collection of all the failure messages (if any)
+        /// discovered.
+        /// </summary>
+        /// <typeparam name="TResponse">Type to be returned. Useful for when you wish to use this method as the last line in a different method and you can use it to return a type that matches the caller method type</typeparam>
+        /// <returns>The default value of type <typeparamref name="TResponse"/></returns>
+        public virtual TResponse ThrowExceptionOnInvalidRules<TResponse>()
+        {
             var errorMessages = GetInvalidStateMessages();
             var shouldThrow = errorMessages.Count > 0;
             if (shouldThrow)
             {
-                var errors = errorMessages.Select(a => new Error { Message = a }).ToList();
+                var errors = errorMessages.Select(a => new Error(a)).ToList();
+                errorMessages.MakeListEmpty((errorString) => { });
                 ClearGlobalErrors();
-                var exception = new IncorrectDataException();
-                exception.Errors.AddRange(errors);
+                var exception = new FailedValidationException(errors);
                 throw exception;
+            }
+            else
+            {
+                return default;
             }
         }
 
         private void ClearGlobalErrors()
         {
-            _expectedStates = new List<RuleDescriptor>();
+            _expectedStates.MakeListEmpty(a => a = null);
         }
 
         private bool ValidationShouldTerminate(bool terminateOnFailure, string errorMessage)
@@ -182,6 +162,11 @@
             }
 
             return string.Empty;
+        }
+
+        public void Dispose()
+        {
+            ClearGlobalErrors();
         }
     }
 }
