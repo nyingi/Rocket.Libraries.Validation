@@ -21,6 +21,16 @@ namespace Rocket.Libraries.Validation
         }
 
         /// <summary>
+        /// Checks if a string value is not empty
+        /// </summary>
+        /// <param name="userValue">The value to check</param>
+        /// <returns>True if the string is not empty or false if the string is empty</returns>
+        public static bool StringIsNotEmpty(string userValue)
+        {
+            return string.IsNullOrEmpty(userValue) == false;
+        }
+
+        /// <summary>
         /// Checks if a value can be parsed to a double.
         /// </summary>
         /// <param name="userValue">Value to attempt to parse</param>
