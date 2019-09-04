@@ -47,6 +47,19 @@
         /// </summary>
         /// <param name="ruleFailed">The value to be evaluated</param>
         /// <param name="messageOnFailure">The message specific to this rule that'll be added the resultant error list if rule fails</param>
+        public static void ThrowIfRuleFailed(bool ruleFailed, string messageOnFailure)
+        {
+            using (var validator = new DataValidator())
+            {
+                validator.EvaluateImmediate<object>(ruleFailed, messageOnFailure);
+            }
+        }
+
+        /// <summary>
+        /// Takes in the a boolean value and checks if it is true.
+        /// </summary>
+        /// <param name="ruleFailed">The value to be evaluated</param>
+        /// <param name="messageOnFailure">The message specific to this rule that'll be added the resultant error list if rule fails</param>
         /// <typeparam name="TResponse">Type to be returned. Useful for when you wish to use this method as the last line in a different method and you can use it to return a type that matches the caller method type</typeparam>
         /// <returns>The default value of type <typeparamref name="TResponse"/></returns>
         public virtual TResponse EvaluateImmediate<TResponse>(bool ruleFailed, string messageOnFailure)
