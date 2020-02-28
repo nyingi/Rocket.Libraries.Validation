@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using System.Globalization;
-using System.Text.RegularExpressions;
-using Rocket.Libraries.Validation.Services;
+﻿using System.Text.RegularExpressions;
 
 namespace Rocket.Libraries.Validation
 {
@@ -18,6 +12,16 @@ namespace Rocket.Libraries.Validation
         public static bool IsEmptyString(string userValue)
         {
             return string.IsNullOrEmpty(userValue);
+        }
+
+        /// <summary>
+        /// Checks if a string value is not empty
+        /// </summary>
+        /// <param name="userValue">The value to check</param>
+        /// <returns>True if the string is not empty or false if the string is empty</returns>
+        public static bool StringIsNotEmpty(string userValue)
+        {
+            return string.IsNullOrEmpty(userValue) == false;
         }
 
         /// <summary>

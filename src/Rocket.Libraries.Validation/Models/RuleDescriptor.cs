@@ -1,7 +1,5 @@
 ﻿namespace Rocket.Libraries.Validation.Models
 {
-    using System;
-
     internal class RuleDescriptor
     {
         //public Func<bool> FailureCondition { get; set; }

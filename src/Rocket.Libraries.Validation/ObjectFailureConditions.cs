@@ -1,7 +1,4 @@
-﻿using Rocket.Libraries.Validation.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Rocket.Libraries.Validation.FailureDescriptors
 {
@@ -9,7 +6,7 @@ namespace Rocket.Libraries.Validation.FailureDescriptors
     {
         public static bool IsDefault<TValue>(TValue value)
         {
-            return value == default;
+            return EqualityComparer<TValue>.Default.Equals(default);
         }
     }
 }

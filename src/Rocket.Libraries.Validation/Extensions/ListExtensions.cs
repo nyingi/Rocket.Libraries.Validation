@@ -6,20 +6,18 @@
 
     internal static class ListExtensions
     {
-        public static bool TrueThat<TType>(this List<TType> list, Func<TType, bool> condition)
+        public static void MakeListEmpty<TType>(this List<TType> list)
         {
-            var occurenceCount = list.Count(condition);
-            return occurenceCount > 0;
+            list.MakeListEmpty(item => { });
         }
 
-        public static void ForEvery<TType>(this List<TType> list, Action<TType, int> iterator)
+        public static void MakeListEmpty<TType>(this List<TType> list, Action<TType> cleaner)
         {
-            var counter = 0;
-            list.ForEach(a =>
+            while (list.Any())
             {
-                iterator(a, counter);
-                counter++;
-            });
+                cleaner(list[0]);
+                list.RemoveAt(0);
+            }
         }
     }
 }
