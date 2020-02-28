@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>2.0.0-beta05</Version>
+    <Version>2.0.0</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/nyingi/Rocket.Libraries.Validation</PackageProjectUrl>
     <RepositoryUrl>https://github.com/nyingi/Rocket.Libraries.Validation</RepositoryUrl>
