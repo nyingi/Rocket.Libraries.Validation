@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using System.Globalization;
-using System.Text.RegularExpressions;
-using Rocket.Libraries.Validation.Services;
+﻿using System.Text.RegularExpressions;
 
 namespace Rocket.Libraries.Validation
 {

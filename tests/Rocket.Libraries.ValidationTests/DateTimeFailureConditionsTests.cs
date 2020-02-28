@@ -1,7 +1,5 @@
 ﻿using Rocket.Libraries.Validation;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace Rocket.Libraries.ValidationTests
